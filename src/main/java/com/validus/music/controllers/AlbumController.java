@@ -36,7 +36,7 @@ public class AlbumController {
 	public static final String BASE_URL = "/api/album";
 
 	private final AlbumService albumService;
-	
+
 	@GetMapping("/all")
 	public AlbumListDTO findAllAlbums() {
 		List<AlbumDTO> albums = albumService.findllAlbums();
@@ -49,9 +49,26 @@ public class AlbumController {
 	}
 
 	@GetMapping("/name/{albumName}")
-	public AlbumDTO findAlbumByName(@PathVariable("albumName") @NotBlank @Size(min =1) String albumName) {
+	public AlbumDTO findAlbumByName(@PathVariable("albumName") @NotBlank @Size(min = 1) String albumName) {
 		return albumService.findAlbumByNameIgnoreCase(albumName);
 	}
+	
+	@GetMapping("/song/name/{songName}")
+	public AlbumDTO findAlbumBySongName(@PathVariable("songName") @NotBlank @Size(min = 1) String songName) {
+		return albumService.findAlbumBySongName(songName);
+	}
+	
+	@GetMapping("/song/id/{id}")
+	public AlbumDTO findAlbumBySongId(@PathVariable("id") @Positive Integer id) {
+		return albumService.findAlbumBySongId(id);
+	}
+	
+	@GetMapping("/song/track/{id}")
+	public AlbumListDTO findAlbumByTrack(@PathVariable("id") @Positive Integer id) {
+		List<AlbumDTO> albums = albumService.findAlbumsByTrack(id);
+		return AlbumListDTO.builder().albums(albums).build();
+	}
+	
 
 	@GetMapping("/yearReleased/{yearReleased}")
 	public AlbumListDTO findAlbumsByYearReleased(@PathVariable("yearReleased") @Positive Integer yearReleased) {
@@ -59,23 +76,34 @@ public class AlbumController {
 		return AlbumListDTO.builder().albums(albums).build();
 	}
 	
+//	@GetMapping("/artist/name/{artistName}")
+//	public AlbumListDTO findAlbumByArtistsIgnoreCase_name(@PathVariable("artistName") @NotBlank @Size(min = 1) String artistName) {
+//		List<AlbumDTO> albums =  albumService.findAlbumByArtistsIgnoreCase_name(artistName);
+//		return AlbumListDTO.builder().albums(albums).build();
+//	}
+//	
+//	@GetMapping("/artist/id/{artistId}")
+//	public AlbumListDTO findAlbumByArtistID(@PathVariable("artistId") @Positive Integer artistId) {
+//		List<AlbumDTO> albums =  albumService.findAlbumByArtists_id(artistId);
+//		return AlbumListDTO.builder().albums(albums).build();
+//	}
+
 	@PostMapping
 	public AlbumDTO createNewAlbum(@RequestBody @Valid AlbumDTO newAlbumDTO) {
 		return albumService.save(newAlbumDTO);
 	}
-	
+
 	@DeleteMapping("/id/{id}")
-	 public Map<String, Boolean> deleteEmployee(@PathVariable("id") @Positive Integer id) {
-		  albumService.deleteById(id);
-		  Map<String, Boolean> response = new HashMap<>();
-		  response.put("deleted", Boolean.TRUE);
-		  return response;
-	  }
-	
-	 @PutMapping("/update/{id}")
-	 public AlbumDTO replaceAlbum(@RequestBody @Valid AlbumDTO newAlbum, @PathVariable("id") @Positive Integer id) {
-		 	return albumService.replaceAlbum(newAlbum, id);
-	  }
-	
+	public Map<String, Boolean> deleteAlbum(@PathVariable("id") @Positive Integer id) {
+		albumService.deleteById(id);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("deleted", Boolean.TRUE);
+		return response;
+	}
+
+	@PutMapping("/update/{id}")
+	public AlbumDTO replaceAlbum(@RequestBody @Valid AlbumDTO newAlbum, @PathVariable("id") @Positive Integer id) {
+		return albumService.replaceAlbum(newAlbum, id);
+	}
 
 }

@@ -4,6 +4,8 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
+import javax.validation.constraints.Positive;
+
 import org.springframework.stereotype.Service;
 
 import com.validus.music.api.mapper.AlbumMapper;
@@ -29,7 +31,6 @@ public class AlbumJPAService implements AlbumService {
 	public List<AlbumDTO> findllAlbums() {
 		
 		log.debug("albums: {}", albumRepository.findAll());
-		
 		
 		 return albumRepository.findAll().stream().map(albumMapper::albumToAlbumDTO).collect(toList());
 	}
@@ -61,7 +62,6 @@ public class AlbumJPAService implements AlbumService {
 	public void deleteById(Integer id) {
 		albumRepository.findAlbumById(id).orElseThrow(()-> new ResourceNotFoundException("Didn't Find Album with Id - " + id));
 		albumRepository.deleteById(id);
-		
 	}
 
 	@Override
@@ -73,12 +73,27 @@ public class AlbumJPAService implements AlbumService {
 			 album.setName(newAlbum.getName());
 			 album.setYearReleased(newAlbum.getYearReleased());
 			 album.setSongs(newAlbum.getSongs());
-			 return albumMapper.albumToAlbumDTO(albumRepository.save(newAlbum));
+			 return albumMapper.albumToAlbumDTO(albumRepository.save(album));
 		 }).orElseGet(()-> {
 			 newAlbum.setId(id);
 			 return albumMapper.albumToAlbumDTO(albumRepository.save(newAlbum));
 		 });
 	}
-	
+
+	@Override
+	public AlbumDTO findAlbumBySongName(String songName) {
+ 		return albumRepository.findAlbumBySongs_nameIgnoreCase(songName).map(albumMapper::albumToAlbumDTO).orElseThrow(()-> new ResourceNotFoundException("couldn't find Album by song name " + songName));
+	}
+
+	@Override
+	public AlbumDTO findAlbumBySongId(int id) {
+ 		return albumRepository.findAlbumBySongs_id(id).map(albumMapper::albumToAlbumDTO).orElseThrow(()-> new ResourceNotFoundException("couldn't find Album by song name " + id));
+	}
+
+	@Override
+	public List<AlbumDTO> findAlbumsByTrack(int trackId) {
+		return albumRepository.findAlbumBySongs_track(trackId).stream().map(albumMapper::albumToAlbumDTO).collect(toList());
+	}
+
 	
 }

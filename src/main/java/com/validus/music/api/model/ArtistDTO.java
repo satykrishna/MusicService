@@ -1,5 +1,6 @@
 package com.validus.music.api.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,6 +17,6 @@ public class ArtistDTO {
 	private String name;
 	
 	@JsonProperty("albums")
-	private Set<AlbumDTO> albumDTO;
+	private Set<AlbumDTO> albumDTO = new HashSet<>();
 	
 }

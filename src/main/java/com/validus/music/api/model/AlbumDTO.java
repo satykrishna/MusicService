@@ -20,16 +20,11 @@ public class AlbumDTO {
     @Size(min=2, message="album name should have atleast 2 characters")
 	private String name;
 
-//	@JsonProperty("artists")
-//	private Set<ArtistDTO> artistDTO = new HashSet<>();;
-//	
 	@Positive
 	private int yearReleased;
 	
 	@JsonProperty("songs")
 	private Set<SongDTO> songsListDTO = new HashSet<>();
-	
-	
 	
 	
 }

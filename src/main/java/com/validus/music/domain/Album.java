@@ -1,16 +1,20 @@
+
 package com.validus.music.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
@@ -37,6 +41,7 @@ public class Album extends BaseModel {
 
 	@Column
 	@NotEmpty
+	@NotBlank
     @Size(min=2, message="Album should have atleast 2 characters")
 	private String name;
 
@@ -48,5 +53,5 @@ public class Album extends BaseModel {
 	@OneToMany(targetEntity = Song.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@JoinColumn(name = "albumId", referencedColumnName = "id")
 	private List<Song> songs = new ArrayList<>();
-
+	
 }

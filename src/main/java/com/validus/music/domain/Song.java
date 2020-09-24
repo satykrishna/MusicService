@@ -25,7 +25,6 @@ import lombok.ToString;
 public class Song extends BaseModel {
 
     @Column
-	@NotEmpty
 	@Positive
 	private int track;
 	

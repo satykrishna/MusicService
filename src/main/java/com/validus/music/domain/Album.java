@@ -46,7 +46,6 @@ public class Album extends BaseModel {
 	private String name;
 
 	@Column
-	@NotEmpty
 	@Positive
 	private int yearReleased;
 

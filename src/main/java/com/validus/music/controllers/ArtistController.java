@@ -91,6 +91,7 @@ public class ArtistController {
 	}
 	
 	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
 	public ArtistDTO createNewArtist(@RequestBody @Valid ArtistDTO newArtistDTO) {
 		return artistService.save(newArtistDTO);
 	}

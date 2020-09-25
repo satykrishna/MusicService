@@ -8,7 +8,7 @@ import com.validus.music.api.model.AlbumDTO;
 
 public interface AlbumService {
 
-	public List<AlbumDTO> findllAlbums();
+	public List<AlbumDTO> findAllAlbums();
 	
 	public AlbumDTO findAlbumById(Integer id);
 	

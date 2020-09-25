@@ -22,28 +22,6 @@ import com.validus.music.domain.Song;
 @DataJpaTest
 public class AlbumRepositoryTest {
 
-	/*
-	 * public List<Album> findAll();
-	 * 
-	 * public Optional<Album> findAlbumById(@PositiveOrZero Integer id);
-	 * 
-	 * public Optional<Album> findAlbumByNameIgnoreCase(@NotBlank String name);
-	 * 
-	 * public List<Album> findAllAlbumsByYearReleased(@PositiveOrZero int
-	 * yearReleased);
-	 * 
-	 * public Album save(@Valid Album newAlbum);
-	 * 
-	 * public void deleteById(@PositiveOrZero Integer id);
-	 * 
-	 * public Optional<Album> findAlbumBySongs_nameIgnoreCase(@NotBlank String
-	 * name);
-	 * 
-	 * public Optional<Album> findAlbumBySongs_id(@PositiveOrZero int id);
-	 * 
-	 * public List<Album> findAlbumBySongs_track(@PositiveOrZero int trackId);
-	 */
-
 	@Autowired
 	private AlbumRepository albumRepository;
 

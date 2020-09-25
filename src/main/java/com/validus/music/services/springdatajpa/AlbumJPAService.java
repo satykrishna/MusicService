@@ -28,9 +28,9 @@ public class AlbumJPAService implements AlbumService {
 	private final AlbumMapper albumMapper;
 	
 	@Override
-	public List<AlbumDTO> findllAlbums() {
+	public List<AlbumDTO> findAllAlbums() {
 		
-		log.debug("albums: {}", albumRepository.findAll());
+//		log.debug("albums: {}", albumRepository.findAll());
 		
 		 return albumRepository.findAll().stream().map(albumMapper::albumToAlbumDTO).collect(toList());
 	}

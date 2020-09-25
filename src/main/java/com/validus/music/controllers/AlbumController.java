@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.validus.music.api.model.AlbumDTO;
@@ -39,7 +41,7 @@ public class AlbumController {
 
 	@GetMapping("/all")
 	public AlbumListDTO findAllAlbums() {
-		List<AlbumDTO> albums = albumService.findllAlbums();
+		List<AlbumDTO> albums = albumService.findAllAlbums();
 		return AlbumListDTO.builder().albums(albums).build();
 	}
 
@@ -76,19 +78,8 @@ public class AlbumController {
 		return AlbumListDTO.builder().albums(albums).build();
 	}
 	
-//	@GetMapping("/artist/name/{artistName}")
-//	public AlbumListDTO findAlbumByArtistsIgnoreCase_name(@PathVariable("artistName") @NotBlank @Size(min = 1) String artistName) {
-//		List<AlbumDTO> albums =  albumService.findAlbumByArtistsIgnoreCase_name(artistName);
-//		return AlbumListDTO.builder().albums(albums).build();
-//	}
-//	
-//	@GetMapping("/artist/id/{artistId}")
-//	public AlbumListDTO findAlbumByArtistID(@PathVariable("artistId") @Positive Integer artistId) {
-//		List<AlbumDTO> albums =  albumService.findAlbumByArtists_id(artistId);
-//		return AlbumListDTO.builder().albums(albums).build();
-//	}
-
 	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
 	public AlbumDTO createNewAlbum(@RequestBody @Valid AlbumDTO newAlbumDTO) {
 		return albumService.save(newAlbumDTO);
 	}

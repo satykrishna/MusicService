@@ -1,30 +1,30 @@
 package com.validus.music.services.springdatajpa;
 
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static com.validus.music.TestData.createAlbum;
+import static com.validus.music.TestData.createAlbumDTO;
+import static com.validus.music.TestData.createAlbumList;
+import static com.validus.music.TestData.createAlbumListDTO;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.validus.music.api.mapper.AlbumMapper;
 import com.validus.music.api.model.AlbumDTO;
-import com.validus.music.api.model.SongDTO;
+import com.validus.music.controllers.Exception.ResourceNotFoundException;
 import com.validus.music.domain.Album;
-import com.validus.music.domain.Song;
 import com.validus.music.repositories.AlbumRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,64 +32,82 @@ class AlbumJPAServiceUnitTest {
 
 	@Mock
 	private AlbumRepository albumRepository;
-	
+
 	@Mock
 	private AlbumMapper albumMapper;
-	
+
 	@InjectMocks
 	AlbumJPAService albumService;
-	
-	@Mock
-	private Set<SongDTO> songs;
-	
-	@BeforeEach
-	public void initialize() {
-	
-	final SongDTO songDTO1 = new SongDTO();
-		
-		songDTO1.setName("song1");
-		songDTO1.setTrack(1);
-		
-		final SongDTO songDTO2 = new SongDTO();
-		
-		songDTO2.setName("song2");
-		songDTO2.setTrack(2);
-		
-		Set<SongDTO> songset = new HashSet<>();
-		
-		songset.add(songDTO2);
-		
-		songset.add(songDTO1);
-	
-		when(songs).thenReturn(songset);
-	}
-	
-	
+
 	@Test
 	@DisplayName("should save album successfully")
-	void shouldSaveAlbumSuccessfully() {
-		
-		final AlbumDTO albumDTO = new AlbumDTO();
-		
-		albumDTO.setName("album1");
-		
-		albumDTO.setYearReleased(2010);
+	void testAlbumSave() {
 
-		albumDTO.setSongsListDTO(songs);
+		given(albumRepository.save(BDDMockito.any(Album.class))).willReturn(createAlbum());
+
+		given(albumMapper.albumDtoToAlbum(BDDMockito.any(AlbumDTO.class))).willReturn(createAlbum());
+
+		given(albumMapper.albumToAlbumDTO(BDDMockito.any(Album.class))).willReturn(createAlbumDTO());
+
+		AlbumDTO saved = albumService.save(createAlbumDTO());
+
+		assertEquals(saved.getName(), "album1");
 		
-		Album newAlbum = albumMapper.albumDtoToAlbum(albumDTO);
+		BDDMockito.verify(albumRepository).save(BDDMockito.any(Album.class));
 		
-		given(albumRepository.findAlbumByNameIgnoreCase(newAlbum.getName())).willReturn(Optional.empty());
+		BDDMockito.verify(albumRepository, times(1)).save(BDDMockito.any(Album.class));
+	}
+
+	@Test
+	@DisplayName("should find all Albums")
+	void testFindAll() {
+
+		List<Album> albums = createAlbumList();
 		
-		given(albumRepository.save(newAlbum)).willAnswer(i->i.getArgument(0));
+		List<AlbumDTO> albumDTOList = createAlbumListDTO();
 		
-		AlbumDTO saved = albumService.save(albumDTO);
+		Album album = createAlbum();
 		
-		assertThat(saved).isNotNull();
+		AlbumDTO albumDTO = createAlbumDTO();
 		
-		verify(albumRepository).save(any(Album.class));
+		BDDMockito.given(albumMapper.albumToAlbumDTO(BDDMockito.any(Album.class))).willReturn(albumDTO);
+		
+		given(albumRepository.findAll()).willReturn(albums);
+		
+		List<AlbumDTO> find = albumService.findAllAlbums();
+		
+		assertEquals(find, albumDTOList);
+		
+		BDDMockito.verify(albumRepository, times(1)).findAll();
+
+	}
+	
+	@Test
+	@DisplayName("should find album by id")
+	void testFindById() {
+		
+		BDDMockito.given(albumMapper.albumToAlbumDTO(BDDMockito.any(Album.class))).willReturn(createAlbumDTO());
+		
+		given(albumRepository.findAlbumById(BDDMockito.anyInt())).willReturn(Optional.of(createAlbum()));
+		
+		AlbumDTO albumById = albumService.findAlbumById(createAlbum().getId());
+
+		assertEquals(albumById, createAlbumDTO());
+	}
+	
+	@Test
+	@DisplayName("shouldn't find album by id")
+	void testFindByIDThatNotExists() {
+		
+		
+		given(albumRepository.findAlbumById(anyInt())).willReturn(Optional.empty());
+
+		assertThrows(ResourceNotFoundException.class, ()-> {
+			albumService.findAlbumById(createAlbumDTO().getId());
+		});
 		
 		
 	}
- 
+	
+
 }

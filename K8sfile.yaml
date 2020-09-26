@@ -1,0 +1,73 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: music-service-ingress
+  annotations: 
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+spec:
+  rules:
+    - host: music-service-dev.valerus.net
+      http:
+        paths:
+          - backend:
+              serviceName: music-service-lb
+              servicePort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: music-service
+  labels:
+    app: music-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: music-service
+  template:
+    metadata:
+      labels:
+        app: music-service
+    spec:
+      containers:
+        - name: music-service
+          image: music-service:latest
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: music-service-config
+              mountPath: "/opt/application/config"
+              readOnly: true
+          resources:
+            limits:
+                cpu: "0.35"
+                memory: "2048M"
+            requests:
+                cpu: "0.2"
+                memory: "1024M"
+      volumes:
+        - name: music-service-config
+          configMap:
+            name: music-service-config
+        - name: java-truststore
+          secret:
+            defaultMode: 420
+            secretName: java-truststore
+            items:
+              - key: cacerts.jks
+                path: cacerts.jks
+              - key: password
+                path: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: music-service-lb
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: music-service

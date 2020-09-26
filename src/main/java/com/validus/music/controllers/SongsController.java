@@ -71,7 +71,7 @@ public class SongsController {
 	}
 	
 	@DeleteMapping("/id/{id}")
-	 public Map<String, Boolean> deleteEmployee(@PathVariable("id") @Positive int id) {
+	 public Map<String, Boolean> deleteSong(@PathVariable("id") @Positive int id) {
 		  songService.deleteBySongId(id);
 		  Map<String, Boolean> response = new HashMap<>();
 		  response.put("deleted", Boolean.TRUE);

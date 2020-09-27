@@ -18,15 +18,12 @@ RUN chown -R appuser:appuser /opt/application
 USER appuser
 
 WORKDIR /opt/application
-COPY --from=backend /build/target/MusicService-0.0.1-SNAPSHOT.jar .
+COPY --from=backend /build/target/MusicService-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080/tcp
 
 ENV APP_HOME="/opt/application"
-#ENV JAVA_NEW_RELIC_ARG="-javaagent:${NEWRELIC_AGENT_HOME}/agent.jar"
 ENV APP_JAR="${APP_HOME}/app.jar"
-#ENV JAVA_OPTS="-Djavax.net.ssl.trustStore=/secret/truststore/cacerts.jks #-Djavax.net.ssl.trustStorePassword=$JAVA_TRUSTSTORE_PASSWORD"
-#ENV SPRING_CONFIG_LOCATION="/opt/application/config/application.properties"
 RUN printf "#!/bin/bash\nexec java -jar ${APP_JAR} 2>&1" > ./start.sh
 
 RUN chmod +x ./start.sh

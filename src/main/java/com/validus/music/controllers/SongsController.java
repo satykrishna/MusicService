@@ -78,7 +78,7 @@ public class SongsController {
 		  return response;
 	  }
 	
-	 @PutMapping("/update/{id}")
+	 @PutMapping("/id/{id}")
 	 public SongDTO replaceSong(@RequestBody @Valid SongDTO newSong, @PathVariable("id") @Positive int id) {
 		 	return songService.replaceSong(newSong, id);
 	  }

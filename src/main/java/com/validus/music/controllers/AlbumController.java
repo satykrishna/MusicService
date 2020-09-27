@@ -92,7 +92,7 @@ public class AlbumController {
 		return response;
 	}
 
-	@PutMapping("/update/{id}")
+	@PutMapping("/id/{id}")
 	public AlbumDTO replaceAlbum(@RequestBody @Valid AlbumDTO newAlbum, @PathVariable("id") @Positive Integer id) {
 		return albumService.replaceAlbum(newAlbum, id);
 	}

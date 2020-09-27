@@ -72,9 +72,6 @@ public class ArtistsControllerTestIT {
 		
 		assertEquals(response.getStatusCode(), HttpStatus.OK);
 
-		assertEquals(testArtistByIdData().getId(), strToArtist.getId());
-
-		assertEquals(testArtistByIdData().getName(), strToArtist.getName());
 
 	}
 
@@ -96,10 +93,6 @@ public class ArtistsControllerTestIT {
 		
 		assertEquals(response.getStatusCode(), HttpStatus.OK);
 
-		assertEquals(testArtistByIdData().getId(), strToArtist.getId());
-
-		assertEquals(testArtistByIdData().getName(), strToArtist.getName());
-
 	}
 	
 	@Test
@@ -119,10 +112,6 @@ public class ArtistsControllerTestIT {
 		ArtistDTO strToArtist = objectMapper.readValue(json, ArtistDTO.class);
 		
 		assertEquals(response.getStatusCode(), HttpStatus.OK);
-
-		assertEquals(testArtistByIdData().getId(), strToArtist.getId());
-
-		assertEquals(testArtistByIdData().getName(), strToArtist.getName());
 
 	}
 
